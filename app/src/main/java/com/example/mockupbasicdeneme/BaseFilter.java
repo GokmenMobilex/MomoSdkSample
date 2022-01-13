@@ -141,127 +141,103 @@ public class BaseFilter extends AppCompatActivity {
     private void applyFilter(int progress) {
         if (isFaceDetected) {
             switch (filterId) {
-                case 0:
+                case 0: // Filter.EyesHeight
                     resultBitmap = nativeLib.setEyesHeight(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 1:
+                case 1: // Filter.MouthHeight
                     resultBitmap = nativeLib.setMouthHeight(progress);
-                    imageView.setImageBitmap(resultBitmap);
-                case 2:
+                    break;
+                case 2: // Filter.EyebrowHeight
                     resultBitmap = nativeLib.setEyebrowsHeight(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 3:
+                case 3: // Filter.Brightness
                     resultBitmap = nativeLib.setBrightness(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 4:
+                case 4: // Filter.ChinHeight
                     resultBitmap = nativeLib.setChinHeight(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 5:
+                case 5: // Filter.BlackNWhite
                     resultBitmap = nativeLib.setBlackAndWhite(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 6:
+                case 6: // Filter.Contrast
                     resultBitmap = nativeLib.setContrast(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 7:
+                case 7: // Filter.ChinSize
                     resultBitmap = nativeLib.setChinSize(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 8:
+                case 8: // Filter.ChinWidth
                     resultBitmap = nativeLib.setChinWidth(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 9:
+                case 9: // Filter.EyebrowLifting
                     resultBitmap = nativeLib.setEyebrowsLifting(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 10:
+                case 10: // Filter.EyebrowRotation
                     resultBitmap = nativeLib.setEyebrowsRotation(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 11:
+                case 11: // Filter.EyebrowShape
                     resultBitmap = nativeLib.setEyebrowsShape(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 12:
+                case 12: // Filter.EyeSize
                     resultBitmap = nativeLib.setEyesSize(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 13:
+                case 13: // Filter.EyeWidth
                     resultBitmap = nativeLib.setEyesWidth(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 14:
-                    resultBitmap = nativeLib.setEyebrowsSingleLifting(progress);
-                    imageView.setImageBitmap(resultBitmap);
-                    break;
-                case 15:
+                case 14: // Filter.EyeDistance
                     resultBitmap = nativeLib.setEyesDistance(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 16:
+                case 15: // Filter.EyebrowSingleLift
+                    resultBitmap = nativeLib.setEyebrowsSingleLifting(progress);
+                    break;
+                case 16: // Filter.Gamma
                     resultBitmap = nativeLib.setGamma(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 17:
+                case 17: // Filter.Vignette
                     resultBitmap = nativeLib.setVignette(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 18:
+                case 18: // Filter.Vibrance
                     resultBitmap = nativeLib.setVibrance(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 19:
+                case 19: // Filter.Temperature
                     resultBitmap = nativeLib.setTemperature(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 20:
+                case 20: // Filter.Structure
                     resultBitmap = nativeLib.setStructure(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 21:
+                case 21: // Filter.Smile
                     resultBitmap = nativeLib.setSmileSeverity(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 22:
+                case 22: // Filter.Sharpen
                     resultBitmap = nativeLib.setSharpen(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 23:
+                case 23: // Filter.Saturation
                     resultBitmap = nativeLib.setSaturation(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 24:
+                case 24: // Filter.NoseWidth
                     resultBitmap = nativeLib.setNoseWidth(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 25:
+                case 25: // Filter.NoseTip
                     resultBitmap = nativeLib.setNoseTip(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 26:
+                case 26: // Filter.NoseSize
                     resultBitmap = nativeLib.setNoseSize(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 27:
+                case 27: // Filter.NoseNarrow
                     resultBitmap = nativeLib.setNoseNarrow(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 28:
+                case 28: // Filter.NoseHeight
                     resultBitmap = nativeLib.setNoseHeight(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
-                case 29:
+                case 29: // Filter.Lighten
                     resultBitmap = nativeLib.setLighten(progress);
-                    imageView.setImageBitmap(resultBitmap);
                     break;
                 default:
+                    resultBitmap = null;
                     break;
+            }
+
+            if (resultBitmap != null) {
+                imageView.setImageBitmap(resultBitmap);
             }
         } else {
             Toast.makeText(this, "Face is not detected", Toast.LENGTH_LONG).show();

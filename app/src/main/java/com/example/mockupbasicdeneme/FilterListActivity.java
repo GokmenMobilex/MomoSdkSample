@@ -32,40 +32,6 @@ public class FilterListActivity extends AppCompatActivity {
             Log.e(TAG, "Image is not found");
         }
 
-        ArrayList<String> filterList = new ArrayList<String>() {
-            {
-                add("set eyes height");
-                add("set mouth height");
-                add("set eyebrow height");
-                add("set brightness");
-                add("set chin height");
-                add("set black & white");
-                add("set contrast ");
-                add("set chin size");
-                add("set chin width ");
-                add("set eyebrow lifting");
-                add("set eyebrow rotation");
-                add("set eyebrow shape");
-                add("set eye size");
-                add("set eye width");
-                add("set eye distance");
-                add("set eyebrow single lift");
-                add("set gamma");
-                add("set vignette");
-                add("set vibrance");
-                add("set temperature");
-                add("set structure");
-                add("set smile");
-                add("set sharpen");
-                add("set saturation");
-                add("set nose width");
-                add("set nose tip");
-                add("set nose size");
-                add("set nose narrow");
-                add("set nose height");
-                add("set lighten");
-            }
-        };
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, filterList);
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener((adapterView, view, position, id) -> openBaseFilterActivity(position));
@@ -75,9 +41,52 @@ public class FilterListActivity extends AppCompatActivity {
      * Open base filter to test selected filter
      */
     private void openBaseFilterActivity(int position) {
+        String selectedFilterDesc = filterList.get(position);
+        Filter selectedFilter = Filter.getFilterByDesc(selectedFilterDesc);
+        if (selectedFilter == null) {
+            Toast.makeText(this, "Unknown filter type", Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Unknown filter type");
+            return;
+        }
+
         Intent navigateIntent = new Intent(this, BaseFilter.class);
         navigateIntent.putExtra("imageuri", selectedImageUri);
-        navigateIntent.putExtra("id", position);
+        navigateIntent.putExtra("id", selectedFilter.filterId);
         startActivity(navigateIntent);
     }
+
+    private final ArrayList<String> filterList = new ArrayList<String>() {
+        {
+            add(Filter.EyesHeight.description);
+            add(Filter.MouthHeight.description);
+            add(Filter.EyebrowHeight.description);
+            add(Filter.Brightness.description);
+            add(Filter.ChinHeight.description);
+            add(Filter.BlackNWhite.description);
+            add(Filter.Contrast.description);
+            add(Filter.ChinSize.description);
+            add(Filter.ChinWidth.description);
+            add(Filter.EyebrowLifting.description);
+            add(Filter.EyebrowRotation.description);
+            add(Filter.EyebrowShape.description);
+            add(Filter.EyeSize.description);
+            add(Filter.EyeWidth.description);
+            add(Filter.EyeDistance.description);
+            add(Filter.EyebrowSingleLift.description);
+            add(Filter.Gamma.description);
+            add(Filter.Vignette.description);
+            add(Filter.Vibrance.description);
+            add(Filter.Temperature.description);
+            add(Filter.Structure.description);
+            add(Filter.Smile.description);
+            add(Filter.Sharpen.description);
+            add(Filter.Saturation.description);
+            add(Filter.NoseWidth.description);
+            add(Filter.NoseTip.description);
+            add(Filter.NoseSize.description);
+            add(Filter.NoseNarrow.description);
+            add(Filter.NoseHeight.description);
+            add(Filter.Lighten.description);
+        }
+    };
 }
