@@ -116,6 +116,7 @@ public class BaseFilter extends AppCompatActivity {
      * Sets seekbar change listener and applies filter with new value
      */
     private void setSeekbarListener() {
+        seekBar.setProgress(DEFAULT_FILTER_LEVEL);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
