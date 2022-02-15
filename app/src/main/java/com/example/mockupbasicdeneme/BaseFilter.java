@@ -1,12 +1,15 @@
 package com.example.mockupbasicdeneme;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
@@ -58,6 +61,45 @@ public class BaseFilter extends AppCompatActivity {
         setSeekbarListener();
         // Applies default filter level
         applyFilter(DEFAULT_FILTER_LEVEL);
+        setMotionListener();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setMotionListener() {
+        imageView.setOnTouchListener((v, event) -> {
+            float eventX = event.getX();
+            float eventY = event.getY();
+            float[] eventXY = new float[]{eventX, eventY};
+
+            Matrix invertMatrix = new Matrix();
+            ((ImageView) v).getImageMatrix().invert(invertMatrix);
+
+            invertMatrix.mapPoints(eventXY);
+            int x = (int) eventXY[0];
+            int y = (int) eventXY[1];
+
+            boolean isOutOfBounds = (x < 0 || x > bitmap.getWidth()) ||
+                    (y < 0 || y > bitmap.getHeight());
+            if (isOutOfBounds) {
+                // TODO: Even when isOutOfBounds is true,
+                //  must handle ACTION_UP to finish paint
+                Log.e(TAG, "Touched outside of the image");
+            } else {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        Log.d(TAG, "Touch down position -> x: " + x + " - y: " + y);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        Log.d(TAG, "Touch up position -> x: " + x + " - y: " + y);
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        Log.d(TAG, "Drag position -> x: " + x + " - y: " + y);
+                        break;
+                }
+            }
+
+            return true;
+        });
     }
 
     /**
