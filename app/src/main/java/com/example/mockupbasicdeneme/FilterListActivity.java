@@ -3,21 +3,22 @@ package com.example.mockupbasicdeneme;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.momolib.NativeLib;
 
 import java.util.ArrayList;
 
 public class FilterListActivity extends AppCompatActivity {
 
-    private static final String TAG = "FilterListActivity";
-
     Uri selectedImageUri;
+    NativeLib nativeLib;
+    Boolean isFacePhoto;
     ListView listView;
+    ArrayList<Modules> moduleList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,12 +26,10 @@ public class FilterListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_filter_list);
 
         listView = findViewById(R.id.list_view);
+        getIntentParams();
 
-        selectedImageUri = getIntent().getParcelableExtra("imageuri");
-        if (selectedImageUri == null) {
-            Toast.makeText(this, "Image is not found", Toast.LENGTH_LONG).show();
-            Log.e(TAG, "Image is not found");
-        }
+        ArrayList<String> filterList = getFilterList();
+        moduleList = getModuleList();
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, filterList);
         listView.setAdapter(arrayAdapter);
@@ -38,55 +37,125 @@ public class FilterListActivity extends AppCompatActivity {
     }
 
     /**
+     * Gets intent extras and sets passed parameters
+     */
+    private void getIntentParams() {
+        Intent intent = getIntent();
+        selectedImageUri = intent.getParcelableExtra("imageuri");
+        nativeLib = intent.getParcelableExtra("nativelib");
+        isFacePhoto = (Boolean) intent.getSerializableExtra("facephoto");
+    }
+
+    /**
      * Open base filter to test selected filter
      */
     private void openBaseFilterActivity(int position) {
-        String selectedFilterDesc = filterList.get(position);
-        Filter selectedFilter = Filter.getFilterByDesc(selectedFilterDesc);
-        if (selectedFilter == null) {
-            Toast.makeText(this, "Unknown filter type", Toast.LENGTH_LONG).show();
-            Log.e(TAG, "Unknown filter type");
-            return;
-        }
-
         Intent navigateIntent = new Intent(this, BaseFilter.class);
         navigateIntent.putExtra("imageuri", selectedImageUri);
-        navigateIntent.putExtra("id", selectedFilter.filterId);
+        navigateIntent.putExtra("id", position);
+        navigateIntent.putExtra("nativelib", nativeLib);
+        navigateIntent.putExtra("facephoto", isFacePhoto);
+        navigateIntent.putExtra("module", moduleList.get(position));
         startActivity(navigateIntent);
     }
 
-    private final ArrayList<String> filterList = new ArrayList<String>() {
-        {
-            add(Filter.EyesHeight.description);
-            add(Filter.MouthHeight.description);
-            add(Filter.EyebrowHeight.description);
-            add(Filter.Brightness.description);
-            add(Filter.ChinHeight.description);
-            add(Filter.BlackNWhite.description);
-            add(Filter.Contrast.description);
-            add(Filter.ChinSize.description);
-            add(Filter.ChinWidth.description);
-            add(Filter.EyebrowLifting.description);
-            add(Filter.EyebrowRotation.description);
-            add(Filter.EyebrowShape.description);
-            add(Filter.EyeSize.description);
-            add(Filter.EyeWidth.description);
-            add(Filter.EyeDistance.description);
-            add(Filter.EyebrowSingleLift.description);
-            add(Filter.Gamma.description);
-            add(Filter.Vignette.description);
-            add(Filter.Vibrance.description);
-            add(Filter.Temperature.description);
-            add(Filter.Structure.description);
-            add(Filter.Smile.description);
-            add(Filter.Sharpen.description);
-            add(Filter.Saturation.description);
-            add(Filter.NoseWidth.description);
-            add(Filter.NoseTip.description);
-            add(Filter.NoseSize.description);
-            add(Filter.NoseNarrow.description);
-            add(Filter.NoseHeight.description);
-            add(Filter.Lighten.description);
-        }
-    };
+    private ArrayList<String> getFilterList() {
+        return new ArrayList<String>() {
+            {
+                add("set eyes height"); // 0
+                add("set mouth height");
+                add("set eyebrow height");
+                add("set brightness");
+                add("set chin height");
+                add("set black & white"); // 5
+                add("set contrast");
+                add("set chin size");
+                add("set chin width");
+                add("set eyebrow lifting");
+                add("set eyebrow rotation"); // 10
+                add("set eyebrow shape");
+                add("set eye size");
+                add("set eye width");
+                add("set eye distance");
+                add("set eyebrow single lift"); // 15
+                add("set gamma");
+                add("set vignette");
+                add("set vibrance");
+                add("set temperature");
+                add("set structure"); // 20
+                add("set smile severity");
+                add("set sharpen");
+                add("set saturation");
+                add("set nose width");
+                add("set nose tip"); // 25
+                add("set nose size");
+                add("set nose narrow");
+                add("set nose height");
+                add("set lighten");
+                add("set mouth width"); // 30
+                add("set mouth size");
+                add("set eyes rotation");
+                add("set glow");
+                add("set grain");
+                add("paint brush"); // 35
+                add("paint glitter");
+                add("acne remover");
+                add("firm remover");
+                add("smoothing");
+                add("heal"); // 40
+                add("cleanse");
+                add("vanish");
+            }
+        };
+    }
+
+    private ArrayList<Modules> getModuleList() {
+        return new ArrayList<Modules>() {
+            {
+                add(Modules.FACE_MORPHING_MODULE); // 0
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.IMAGE_ENHANCEMENT_MODULE);
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.IMAGE_ENHANCEMENT_MODULE); // 5
+                add(Modules.IMAGE_ENHANCEMENT_MODULE);
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.FACE_MORPHING_MODULE); // 10
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.FACE_MORPHING_MODULE); // 15
+                add(Modules.IMAGE_ENHANCEMENT_MODULE);
+                add(Modules.IMAGE_ENHANCEMENT_MODULE);
+                add(Modules.IMAGE_ENHANCEMENT_MODULE);
+                add(Modules.IMAGE_ENHANCEMENT_MODULE);
+                add(Modules.IMAGE_ENHANCEMENT_MODULE); // 20
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.IMAGE_ENHANCEMENT_MODULE);
+                add(Modules.IMAGE_ENHANCEMENT_MODULE);
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.FACE_MORPHING_MODULE); // 25
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.IMAGE_ENHANCEMENT_MODULE);
+                add(Modules.FACE_MORPHING_MODULE); // 30
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.FACE_MORPHING_MODULE);
+                add(Modules.IMAGE_ENHANCEMENT_MODULE);
+                add(Modules.IMAGE_ENHANCEMENT_MODULE);
+                add(Modules.PAINT_MODULE); // 35
+                add(Modules.PAINT_MODULE);
+                add(Modules.HEAL_AND_SMOOTH_MODULE);
+                add(Modules.HEAL_AND_SMOOTH_MODULE);
+                add(Modules.HEAL_AND_SMOOTH_MODULE);
+                add(Modules.HEAL_AND_SMOOTH_MODULE); // 40
+                add(Modules.HEAL_AND_SMOOTH_MODULE);
+                add(Modules.HEAL_AND_SMOOTH_MODULE);
+            }
+        };
+    }
 }

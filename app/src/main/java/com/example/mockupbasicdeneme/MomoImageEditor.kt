@@ -15,8 +15,9 @@ class MomoImageEditor private constructor(
 
     companion object {
         private const val TAG = "MomoImageEditor"
-        private const val FACEMODEL_CUSTOM = "facemodel_custom.onnx"
-        private const val FACEMARK_MODEL = "facemark_model.onnx"
+        private const val FACEMODEL_CUSTOM = "fdet_128_r_fbepoch_50_loss_3.onnx"
+        private const val FACEMARK_MODEL =
+            "wo_dsnt_skn36_mltp2_98points_add_layer_dsnt_rmse_fm_12x12x288_grayimg_shape_192x192_data_300wv_43720plus_waug_20052.onnx"
     }
 
     private val nativeLib: NativeLib
@@ -27,9 +28,9 @@ class MomoImageEditor private constructor(
         val faceMarkModel = File(faceDir, FACEMARK_MODEL)
 
         val fModelInputStream: InputStream = context.resources
-            .openRawResource(R.raw.facemodel_custom)
+            .openRawResource(R.raw.fdet_128_r_fbepoch_50_loss_3)
         val fMarkInputStream: InputStream = context.resources
-            .openRawResource(R.raw.facemark_model)
+            .openRawResource(R.raw.wo_dsnt_skn36_mltp2_98points_add_layer_dsnt_rmse_fm_12x12x288_grayimg_shape_192x192_data_300wv_43720plus_waug_20052)
 
         fileCopy(faceModel, fModelInputStream)
         fileCopy(faceMarkModel, fMarkInputStream)
@@ -37,21 +38,21 @@ class MomoImageEditor private constructor(
         nativeLib = NativeLib()
 
         nativeLib.initLib(faceModel.absolutePath, faceMarkModel.absolutePath)
-        nativeLib.faceDetection(bitmap) // TODO Ask SDK to set image with another function
+        nativeLib.setImage(bitmap)
     }
 
     fun isFaceDetected(): Boolean {
-        return nativeLib.faceDetection(bitmap)
+        return nativeLib.isFaceDetected
     }
 
     fun setNewImage(bitmap: Bitmap) {
-        nativeLib.faceDetection(bitmap) // TODO Ask SDK to set image with another function
+        nativeLib.setImage(bitmap)
     }
 
-    fun applyFilter(filter: KFilter.SliderFilter, filterLevel: Int): Bitmap {
-        val result = filter.apply(nativeLib, filterLevel).also {
+    fun applyFilter(filter: Filter.SliderFilter, filterLevel: Int): Bitmap? {
+        val result = filter.apply(nativeLib, filterLevel)?.also {
             bitmap = it
-            nativeLib.faceDetection(bitmap) // TODO Ask SDK to set image with another function
+            nativeLib.setImage(bitmap)
         }
         return result
     }
@@ -94,7 +95,7 @@ class MomoImageEditor private constructor(
     }
 }
 
-class KFilter {
+class Filter {
 
     companion object {
         private const val TAG = "Filter"
@@ -102,14 +103,14 @@ class KFilter {
 
     abstract class SliderFilter {
 
-        abstract fun apply(nativeLib: NativeLib, filterLevel: Int): Bitmap
+        abstract fun apply(nativeLib: NativeLib, filterLevel: Int): Bitmap?
 
         class ChinWidth : SliderFilter() {
 
-            override fun apply(nativeLib: NativeLib, filterLevel: Int): Bitmap {
-                if (nativeLib.faceDetection(nativeLib.bitmapWithLandmarks).not()) {
+            override fun apply(nativeLib: NativeLib, filterLevel: Int): Bitmap? {
+                if (nativeLib.isFaceDetected.not()) {
                     Log.e(TAG, "Face is not detected")
-                    return nativeLib.bitmapWithLandmarks
+                    return null
                 }
 
                 return nativeLib.setChinWidth(filterLevel)
@@ -140,7 +141,7 @@ class TestUsage(private val injectedBuilder: MomoImageEditor.Builder) {
             return
         }
 
-        val resultImage: Bitmap = imageEditor
-            .applyFilter(KFilter.SliderFilter.ChinWidth(), sliderValue)
+        val resultImage: Bitmap? = imageEditor
+            .applyFilter(Filter.SliderFilter.ChinWidth(), sliderValue)
     }
 }
