@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -71,23 +72,7 @@ public class BaseFilter extends AppCompatActivity {
     private void initConfirmButton() {
         Button confirmButton = findViewById(R.id.confirm_button);
         confirmButton.setOnClickListener(view -> {
-            switch (module) {
-                case FACE_MORPHING_MODULE:
-                    resultBitmap = nativeLib.confirmFaceMorphing();
-                    break;
-                case IMAGE_ENHANCEMENT_MODULE:
-                    resultBitmap = nativeLib.confirmImageEnhancement();
-                    break;
-                case PAINT_MODULE:
-                    resultBitmap = nativeLib.confirmPaint();
-                    break;
-                case HEAL_AND_SMOOTH_MODULE:
-                    resultBitmap = nativeLib.confirmHealAndSmooth();
-                    break;
-                default:
-                    break;
-            }
-
+            resultBitmap = nativeLib.confirm();
             imageView.setImageBitmap(resultBitmap);
         });
     }
@@ -176,6 +161,7 @@ public class BaseFilter extends AppCompatActivity {
      * Applies selected slider filter with given value
      */
     private void applyFilter(int progress) {
+        long startTime = Calendar.getInstance().getTimeInMillis();
         switch (filterId) {
             case 0:
                 resultBitmap = nativeLib.setEyesHeight(progress);
@@ -288,6 +274,8 @@ public class BaseFilter extends AppCompatActivity {
         }
 
         if (resultBitmap != null) {
+            long endTime = Calendar.getInstance().getTimeInMillis();
+            Log.d(TAG, "Filter execution time: " + (endTime - startTime));
             imageView.setImageBitmap(resultBitmap);
         }
     }
@@ -296,6 +284,7 @@ public class BaseFilter extends AppCompatActivity {
      * Applies selected brush filter with given position
      */
     private void applyFilter(int positionX, int positionY) {
+        long startTime = Calendar.getInstance().getTimeInMillis();
         switch (filterId) {
             case 35:
                 resultBitmap = nativeLib.paintBrush(positionX, positionY, 255, 0, 0, 4);
@@ -330,6 +319,8 @@ public class BaseFilter extends AppCompatActivity {
         }
 
         if (resultBitmap != null) {
+            long endTime = Calendar.getInstance().getTimeInMillis();
+            Log.d(TAG, "Filter execution time: " + (endTime - startTime));
             imageView.setImageBitmap(resultBitmap);
         }
     }
