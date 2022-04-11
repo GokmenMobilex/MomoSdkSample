@@ -1,6 +1,7 @@
 package com.example.mockupbasicdeneme;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,23 +21,28 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.momolib.NativeLib;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class BaseFilter extends AppCompatActivity {
 
     private static final String TAG = "BaseFilter";
+    private static final String LUT_FILE_NAME = "arabica12.CUBE";
     private static final int DEFAULT_FILTER_LEVEL = 50;
 
     SeekBar seekBar;
     ImageView imageView;
     Bitmap glitterBitmap;
+    Bitmap darkCircleBitmap;
     Bitmap selectedBitmap;
     Bitmap resultBitmap;
     Uri selectedImageUri;
     int filterId;
     NativeLib nativeLib;
     Boolean isFacePhoto;
-    Modules module;
+    File arabic12LutFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +52,12 @@ public class BaseFilter extends AppCompatActivity {
         seekBar = findViewById(R.id.seekBar);
         imageView = findViewById(R.id.imageView2);
         glitterBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.glittertexture);
+        darkCircleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.darkcircle);
 
         getIntentParams();
         initConfirmButton();
         setSelectedImage();
+        setLutFile();
         setSeekbarListener();
         setMotionListener();
     }
@@ -63,7 +71,6 @@ public class BaseFilter extends AppCompatActivity {
         filterId = intent.getIntExtra("id", 0);
         nativeLib = intent.getParcelableExtra("nativelib");
         isFacePhoto = (Boolean) intent.getSerializableExtra("facephoto");
-        module = (Modules) intent.getSerializableExtra("module");
     }
 
     /**
@@ -88,6 +95,13 @@ public class BaseFilter extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setLutFile() {
+        InputStream arabic12LutStream = getResources().openRawResource(R.raw.arabica12);
+        File LutDir = getDir("Lutlib", Context.MODE_PRIVATE);
+        arabic12LutFile = new File(LutDir, LUT_FILE_NAME);
+        fileCopy(arabic12LutFile, arabic12LutStream);
     }
 
     /**
@@ -268,6 +282,27 @@ public class BaseFilter extends AppCompatActivity {
             case 34:
                 resultBitmap = nativeLib.setGrain(progress);
                 break;
+            case 43:
+                resultBitmap = nativeLib.setShadows(progress);
+                break;
+            case 48:
+                resultBitmap = nativeLib.eyesWhitener(progress);
+                break;
+            case 49:
+                resultBitmap = nativeLib.teethWhitener();
+                break;
+            case 50:
+                resultBitmap = nativeLib.darkCirclesRemoverV1(darkCircleBitmap);
+                break;
+            case 51:
+                resultBitmap = nativeLib.darkCirclesRemoverV2(darkCircleBitmap);
+                break;
+            case 52:
+                resultBitmap = nativeLib.redEyesRemover();
+                break;
+            case 54:
+                resultBitmap = nativeLib.LUT(arabic12LutFile.getAbsolutePath());
+                break;
             default:
                 resultBitmap = null;
                 break;
@@ -313,6 +348,18 @@ public class BaseFilter extends AppCompatActivity {
                 Log.d(TAG, "Vanish done");
                 resultBitmap = nativeLib.vanish(positionX, positionY, 4, false);
                 break;
+            case 44:
+                resultBitmap = nativeLib.paintSkin(positionX, positionY, 255, 0, 0, 4);
+                break;
+            case 45:
+                resultBitmap = nativeLib.paintTone(positionX, positionY, 255, 0, 0, 4);
+                break;
+            case 47:
+                resultBitmap = nativeLib.textureChanger(positionX, positionY, 4, 0.5F, glitterBitmap);
+                break;
+            case 53:
+                resultBitmap = nativeLib.refine(positionX, positionY, 4, true);
+                break;
             default:
                 resultBitmap = null;
                 break;
@@ -322,6 +369,24 @@ public class BaseFilter extends AppCompatActivity {
             long endTime = Calendar.getInstance().getTimeInMillis();
             Log.d(TAG, "Filter execution time: " + (endTime - startTime));
             imageView.setImageBitmap(resultBitmap);
+        }
+    }
+
+    private void fileCopy(File mFile, InputStream mIs) {
+        try {
+            FileOutputStream mOs = new FileOutputStream(mFile);
+            byte[] buffer = new byte[4096];
+            int byteRead = mIs.read(buffer);
+
+            while (byteRead != -1) {
+                mOs.write(buffer, 0, byteRead);
+                byteRead = mIs.read(buffer);
+            }
+
+            mIs.close();
+            mOs.close();
+        } catch (Exception e) {
+            Log.e(TAG, "File copy error", e);
         }
     }
 }

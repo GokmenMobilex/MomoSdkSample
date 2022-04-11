@@ -18,7 +18,6 @@ public class FilterListActivity extends AppCompatActivity {
     NativeLib nativeLib;
     Boolean isFacePhoto;
     ListView listView;
-    ArrayList<Modules> moduleList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +28,6 @@ public class FilterListActivity extends AppCompatActivity {
         getIntentParams();
 
         ArrayList<String> filterList = getFilterList();
-        moduleList = getModuleList();
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, filterList);
         listView.setAdapter(arrayAdapter);
@@ -55,7 +53,6 @@ public class FilterListActivity extends AppCompatActivity {
         navigateIntent.putExtra("id", position);
         navigateIntent.putExtra("nativelib", nativeLib);
         navigateIntent.putExtra("facephoto", isFacePhoto);
-        navigateIntent.putExtra("module", moduleList.get(position));
         startActivity(navigateIntent);
     }
 
@@ -105,56 +102,18 @@ public class FilterListActivity extends AppCompatActivity {
                 add("heal"); // 40
                 add("cleanse");
                 add("vanish");
-            }
-        };
-    }
-
-    private ArrayList<Modules> getModuleList() {
-        return new ArrayList<Modules>() {
-            {
-                add(Modules.FACE_MORPHING_MODULE); // 0
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.IMAGE_ENHANCEMENT_MODULE);
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.IMAGE_ENHANCEMENT_MODULE); // 5
-                add(Modules.IMAGE_ENHANCEMENT_MODULE);
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.FACE_MORPHING_MODULE); // 10
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.FACE_MORPHING_MODULE); // 15
-                add(Modules.IMAGE_ENHANCEMENT_MODULE);
-                add(Modules.IMAGE_ENHANCEMENT_MODULE);
-                add(Modules.IMAGE_ENHANCEMENT_MODULE);
-                add(Modules.IMAGE_ENHANCEMENT_MODULE);
-                add(Modules.IMAGE_ENHANCEMENT_MODULE); // 20
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.IMAGE_ENHANCEMENT_MODULE);
-                add(Modules.IMAGE_ENHANCEMENT_MODULE);
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.FACE_MORPHING_MODULE); // 25
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.IMAGE_ENHANCEMENT_MODULE);
-                add(Modules.FACE_MORPHING_MODULE); // 30
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.FACE_MORPHING_MODULE);
-                add(Modules.IMAGE_ENHANCEMENT_MODULE);
-                add(Modules.IMAGE_ENHANCEMENT_MODULE);
-                add(Modules.PAINT_MODULE); // 35
-                add(Modules.PAINT_MODULE);
-                add(Modules.HEAL_AND_SMOOTH_MODULE);
-                add(Modules.HEAL_AND_SMOOTH_MODULE);
-                add(Modules.HEAL_AND_SMOOTH_MODULE);
-                add(Modules.HEAL_AND_SMOOTH_MODULE); // 40
-                add(Modules.HEAL_AND_SMOOTH_MODULE);
-                add(Modules.HEAL_AND_SMOOTH_MODULE);
+                add("setShadows");
+                add("paintSkin");
+                add("paintTone"); // 45
+                add("select2copy");
+                add("textureChanger");
+                add("eyesWhitener");
+                add("teethWhitener");
+                add("darkCirclesRemoverV1"); // 50
+                add("darkCirclesRemoverV2");
+                add("redEyesRemover");
+                add("refine");
+                add("LUT");
             }
         };
     }
