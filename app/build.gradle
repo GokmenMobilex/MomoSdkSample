@@ -7,7 +7,7 @@ android {
     compileSdk 30
 
     defaultConfig {
-        applicationId "com.example.mockupbasicdeneme"
+        applicationId "com.example.mockupbasicdeneme2"
         minSdk 21
         targetSdk 30
         versionCode 1

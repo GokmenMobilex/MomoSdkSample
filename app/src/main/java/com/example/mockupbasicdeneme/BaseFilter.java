@@ -354,6 +354,9 @@ public class BaseFilter extends AppCompatActivity {
             case 45:
                 resultBitmap = nativeLib.paintTone(positionX, positionY, 255, 0, 0, 4);
                 break;
+            case 46:
+                resultBitmap = nativeLib.select2copy(positionX, positionY, positionX - 100, positionY - 100, 10, true, false);
+                break;
             case 47:
                 resultBitmap = nativeLib.textureChanger(positionX, positionY, 4, 0.5F, glitterBitmap);
                 break;
