@@ -112,7 +112,7 @@ public class FilterListActivity extends AppCompatActivity {
                 add("darkCirclesRemoverV1"); // 50
                 add("darkCirclesRemoverV2");
                 add("redEyesRemover");
-                add("refine");
+                add("reshape");
                 add("LUT");
             }
         };

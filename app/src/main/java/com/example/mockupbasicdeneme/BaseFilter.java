@@ -364,7 +364,8 @@ public class BaseFilter extends AppCompatActivity {
                 resultBitmap = nativeLib.textureChanger(positionX, positionY, 4, 0.5F, glitterBitmap);
                 break;
             case 53:
-                resultBitmap = nativeLib.reshape(positionX, positionY, 4, true);
+                nativeLib.reshape(positionX, positionY, 4, true);
+                resultBitmap = nativeLib.reshape(positionX, positionY + 300, 4, false);
                 break;
             default:
                 resultBitmap = null;
