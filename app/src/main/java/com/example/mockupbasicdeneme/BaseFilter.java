@@ -289,7 +289,7 @@ public class BaseFilter extends AppCompatActivity {
                 resultBitmap = nativeLib.eyesWhitener(progress);
                 break;
             case 49:
-                resultBitmap = nativeLib.teethWhitener();
+                resultBitmap = nativeLib.teethWhitener(progress);
                 break;
             case 50:
                 resultBitmap = nativeLib.darkCirclesRemoverV1(darkCircleBitmap);
@@ -322,10 +322,10 @@ public class BaseFilter extends AppCompatActivity {
         long startTime = Calendar.getInstance().getTimeInMillis();
         switch (filterId) {
             case 35:
-                resultBitmap = nativeLib.paintBrush(positionX, positionY, 255, 0, 0, 4);
+                resultBitmap = nativeLib.paintBrush(positionX, positionY, 255, 0, 0, 4, 0.5f);
                 break;
             case 36:
-                resultBitmap = nativeLib.paintGlitter(positionX, positionY, 255, 0, 0, 4, glitterBitmap);
+                resultBitmap = nativeLib.paintGlitter(positionX, positionY, 255, 0, 0, 4, 0.5f, glitterBitmap);
                 break;
             case 37:
                 resultBitmap = nativeLib.acneRemover(positionX, positionY, 4);
@@ -338,15 +338,18 @@ public class BaseFilter extends AppCompatActivity {
                 break;
             case 40:
                 Log.d(TAG, "Heal done");
-                resultBitmap = nativeLib.heal(positionX, positionY, 4, false);
+                nativeLib.heal(positionX, positionY, 4, false);
+                resultBitmap = nativeLib.heal(positionX, positionY, 4, true);
                 break;
             case 41:
                 Log.d(TAG, "Cleanse done");
-                resultBitmap = nativeLib.cleanse(positionX, positionY, 4, false);
+                nativeLib.cleanse(positionX, positionY, 4, false);
+                resultBitmap = nativeLib.cleanse(positionX, positionY, 4, true);
                 break;
             case 42:
                 Log.d(TAG, "Vanish done");
-                resultBitmap = nativeLib.vanish(positionX, positionY, 4, false);
+                nativeLib.vanish(positionX, positionY, 4, false);
+                resultBitmap = nativeLib.vanish(positionX, positionY, 4, true);
                 break;
             case 44:
                 resultBitmap = nativeLib.paintSkin(positionX, positionY, 255, 0, 0, 4);
@@ -361,7 +364,7 @@ public class BaseFilter extends AppCompatActivity {
                 resultBitmap = nativeLib.textureChanger(positionX, positionY, 4, 0.5F, glitterBitmap);
                 break;
             case 53:
-                resultBitmap = nativeLib.refine(positionX, positionY, 4, true);
+                resultBitmap = nativeLib.reshape(positionX, positionY, 4, true);
                 break;
             default:
                 resultBitmap = null;
